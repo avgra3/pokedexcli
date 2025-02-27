@@ -4,13 +4,18 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	internal "github.com/avgra3/pokedexcli/internal"
 	"os"
 	"strings"
+	"time"
+
+	pokeapi "github.com/avgra3/pokedexcli/internal/pokeapi"
+	pokecache "github.com/avgra3/pokedexcli/internal/pokecache"
 )
 
 func main() {
 	configuration := config{}
+	interval := time.Second * 60
+	cachePointer := pokecache.NewCache(interval)
 
 	commands := map[string]cliCommand{
 		"exit": {
@@ -46,7 +51,7 @@ func main() {
 			fmt.Println("Unknown command")
 		}
 		if ok {
-			err := value.callback(&configuration)
+			err := value.callback(&configuration, cachePointer)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -60,40 +65,48 @@ func cleanInput(text string) []string {
 	return strings.Fields(cleanedText)
 }
 
-func commandExit(configuration *config) error {
+func commandExit(configuration *config, cache *pokecache.Cache) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func commandHelp(configuration *config) error {
+func commandHelp(configuration *config, cache *pokecache.Cache) error {
 	message := fmt.Sprintf("Welcome to the Pokedex!\nUsage:\n\nhelp: Displays a help message\nexit: Exit the Pokedex\n")
 	fmt.Print(message)
 	return nil
 }
 
-func commandMap(configuration *config) error {
+func commandMap(configuration *config, cache *pokecache.Cache) error {
 	// Get 20 location areas in the Pokemon world
 	// Each subsequent call gets the next 20 locations
-	locationsResult := internal.GetLocations("https://pokeapi.co/api/v2/location-area")
+	const POKEAPI = "https://pokeapi.co/api/v2/location-area"
+	locationsResult := pokeapi.GetLocations(POKEAPI, cache)
 
 	if configuration.Next != "" {
-		locationsResult = internal.GetLocations(configuration.Next)
+		locationsResult = pokeapi.GetLocations(configuration.Next, cache)
 	}
 	configuration.Next = locationsResult.Next
 	configuration.Previous = locationsResult.Previous
+	// Allow for first page to just return the current page
+	if locationsResult.Previous == "" {
+		configuration.Previous = POKEAPI
+	}
 	for _, value := range locationsResult.Results {
 		fmt.Println(value.Name)
 	}
 	return nil
 }
 
-func commandMapBack(configuration *config) error {
+func commandMapBack(configuration *config, cache *pokecache.Cache) error {
 	previousApiUrl := configuration.Previous
 	if previousApiUrl != "" {
-		locationsResult := internal.GetLocations(previousApiUrl)
+		locationsResult := pokeapi.GetLocations(previousApiUrl, cache)
 		configuration.Next = locationsResult.Next
 		configuration.Previous = locationsResult.Previous
+		if locationsResult.Previous == "" {
+			configuration.Previous = previousApiUrl
+		}
 
 		for _, value := range locationsResult.Results {
 			fmt.Println(value.Name)
@@ -108,7 +121,7 @@ func commandMapBack(configuration *config) error {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, *pokecache.Cache) error
 }
 
 type config struct {
