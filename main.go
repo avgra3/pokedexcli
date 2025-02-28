@@ -38,6 +38,11 @@ func main() {
 			description: "The previous 20 locations in the Pokemon world",
 			callback:    commandMapBack,
 		},
+		"explore": {
+			name:        "explore",
+			description: "See all Pokemon at a given location",
+			callback:    commandExplore,
+		},
 	}
 
 	scanner := bufio.NewScanner(os.Stdin)
@@ -116,6 +121,11 @@ func commandMapBack(configuration *config, cache *pokecache.Cache) error {
 	}
 	e := errors.New("There is no \"previous\" page of locations")
 	return e
+}
+
+func commandExplore(configuration *config, cache *pokecache.Cache) error {
+
+	return nil
 }
 
 type cliCommand struct {
