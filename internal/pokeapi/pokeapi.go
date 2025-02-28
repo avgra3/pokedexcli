@@ -254,30 +254,30 @@ type EvolutionTrigger struct {
 }
 
 type Move struct {
-	Id                 int                   `json:"id"`
-	Name               string                `json:"name"`
-	Accuracy           int                   `json:"accuracy"`
-	EffectChance       int                   `json:"effect_chance"`
-	Pp                 int                   `json:"pp"`
-	Priority           int                   `json:"priority"`
-	Power              int                   `json:"power"`
-	ContestCombos      ContestComboSets      `json:"contest_combos"`
-	ContestType        ContestType           `json:"contest_type"`
-	ContestEffect      ContestEffect         `json:"contest_effect"`
-	DamageClass        MoveDamageClass       `json:"damage_class"`
-	EffectEntries      VerboseEffect         `json:"effect_entries"`
-	EffectChanges      AbilityEffectChange   `json:"effect_changes"`
-	LearnedByPokemon   []AbilityEffectChange `json:"learned_by_pokemon"`
-	FlavorTextEntries  []MoveFlavorText      `json:"flavor_text_entries"`
-	Generation         Generation            `json:"generation"`
-	Machines           []MachineValueDetail  `json:"machines"`
-	Meta               MoveMetaData          `json:"meta"`
-	Names              []LanguageName        `json:"names"`
-	PastValues         []PastMoveStatValues  `json:"past_values"`
-	StatChanges        []MoveStatChange      `json:"stat_changes"`
-	SuperContestEffect MoveStatChange        `json:"stat_contest_effect"`
-	Target             *MoveTarget           `json:"target"`
-	Type               Type                  `json:"type"`
+	Id                 int                    `json:"id"`
+	Name               string                 `json:"name"`
+	Accuracy           int                    `json:"accuracy"`
+	EffectChance       int                    `json:"effect_chance"`
+	Pp                 int                    `json:"pp"`
+	Priority           int                    `json:"priority"`
+	Power              int                    `json:"power"`
+	ContestCombos      ContestComboSets       `json:"contest_combos"`
+	ContestType        ContestType            `json:"contest_type"`
+	ContestEffect      ContestEffect          `json:"contest_effect"`
+	DamageClass        MoveDamageClass        `json:"damage_class"`
+	EffectEntries      VerboseEffect          `json:"effect_entries"`
+	EffectChanges      AbilityEffectChange    `json:"effect_changes"`
+	LearnedByPokemon   []AbilityEffectChange  `json:"learned_by_pokemon"`
+	FlavorTextEntries  []MoveFlavorText       `json:"flavor_text_entries"`
+	Generation         Generation             `json:"generation"`
+	Machines           []MachineVersionDetail `json:"machines"`
+	Meta               MoveMetaData           `json:"meta"`
+	Names              []LanguageName         `json:"names"`
+	PastValues         []PastMoveStatValues   `json:"past_values"`
+	StatChanges        []MoveStatChange       `json:"stat_changes"`
+	SuperContestEffect MoveStatChange         `json:"stat_contest_effect"`
+	Target             *MoveTarget            `json:"target"`
+	Type               Type                   `json:"type"`
 }
 
 type PastMoveStatValues struct {

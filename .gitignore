@@ -1,3 +1,7 @@
-./pokedexcli
+# Other
 repl.log
 httpTests
+
+# Our Build Binaries
+pokedexcli
+./pokedexcli
